@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sparkles, FileText, Search, MessageSquare, PenLine, ArrowRight, Zap, Shield, Brain } from "lucide-react";
+import { ModeToggle } from "@/components/mode-toggle";
 
 const features = [
   { icon: FileText, title: "Smart Resume Builder", desc: "10+ professional templates with live preview and AI suggestions", color: "text-primary" },
@@ -25,6 +26,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-3">
             <Link to="/auth"><Button variant="ghost">Sign In</Button></Link>
             <Link to="/auth?mode=signup"><Button variant="hero">Get Started <ArrowRight className="h-4 w-4" /></Button></Link>
+            <ModeToggle />
           </div>
         </div>
       </nav>
@@ -132,7 +134,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="border-t border-border py-8">
         <div className="mx-auto max-w-6xl px-6 text-center text-sm text-muted-foreground">
-          © 2026 CareerForge. Built with AI + ML.
+          © 2026 CareerForge. Created by me.
         </div>
       </footer>
     </div>

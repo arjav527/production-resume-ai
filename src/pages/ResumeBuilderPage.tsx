@@ -12,6 +12,9 @@ import { type ResumeData, emptyResume } from "@/lib/resume-types";
 import { Plus, Trash2, Save, FileText, Eye, Sparkles } from "lucide-react";
 import { aiRequest } from "@/lib/ai";
 
+import { useRef } from "react";
+import { useReactToPrint } from "react-to-print";
+
 export default function ResumeBuilderPage() {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -19,6 +22,13 @@ export default function ResumeBuilderPage() {
   const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
   const [saving, setSaving] = useState(false);
   const [enhancing, setEnhancing] = useState<string | null>(null);
+
+  const componentRef = useRef<HTMLDivElement>(null);
+
+  const handlePrint = useReactToPrint({
+    contentRef: componentRef,
+    documentTitle: resume.personalInfo.fullName || "Resume",
+  });
 
   const updatePersonal = (field: string, value: string) => {
     setResume(r => ({ ...r, personalInfo: { ...r.personalInfo, [field]: value } }));
@@ -118,6 +128,9 @@ export default function ResumeBuilderPage() {
             </Button>
             <Button variant={activeTab === "preview" ? "hero" : "outline"} size="sm" onClick={() => setActiveTab("preview")}>
               <Eye className="h-4 w-4" /> Preview
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => handlePrint()}>
+              <FileText className="h-4 w-4" /> Download PDF
             </Button>
             <Button variant="hero" size="sm" onClick={saveResume} disabled={saving}>
               <Save className="h-4 w-4" /> {saving ? "Saving..." : "Save"}
@@ -273,7 +286,9 @@ export default function ResumeBuilderPage() {
           </motion.div>
         ) : (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass-card p-8">
-            <ResumePreview resume={resume} />
+            <div ref={componentRef}>
+              <ResumePreview resume={resume} />
+            </div>
           </motion.div>
         )}
       </div>

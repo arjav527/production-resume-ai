@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import DashboardLayout from "@/components/DashboardLayout";
-import { FileText, Search, MessageSquare, PenLine, Plus, TrendingUp, BarChart3 } from "lucide-react";
+import { FileText, Search, MessageSquare, PenLine, Plus, TrendingUp, BarChart3, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -16,18 +16,20 @@ const quickActions = [
 
 export default function DashboardPage() {
   const { user } = useAuth();
-  const [stats, setStats] = useState({ resumes: 0, analyses: 0, coverLetters: 0 });
+  const [stats, setStats] = useState({ resumes: 0, analyses: 0, coverLetters: 0, credits: 0 });
 
   useEffect(() => {
     if (!user) return;
     Promise.all([
       supabase.from("resumes").select("id", { count: "exact", head: true }).eq("user_id", user.id),
       supabase.from("cover_letters").select("id", { count: "exact", head: true }).eq("user_id", user.id),
-    ]).then(([r, c]) => {
+      supabase.from("profiles").select("credits").eq("user_id", user.id).single(),
+    ]).then(([r, c, p]) => {
       setStats({
         resumes: r.count || 0,
         analyses: r.count || 0,
         coverLetters: c.count || 0,
+        credits: p.data?.credits || 0,
       });
     });
   }, [user]);
@@ -43,11 +45,12 @@ export default function DashboardPage() {
         </motion.div>
 
         {/* Stats */}
-        <div className="mt-8 grid gap-4 sm:grid-cols-3">
+        <div className="mt-8 grid gap-4 sm:grid-cols-4">
           {[
             { label: "Resumes", value: stats.resumes, icon: FileText, color: "text-primary" },
             { label: "ATS Analyses", value: stats.analyses, icon: BarChart3, color: "text-secondary" },
             { label: "Cover Letters", value: stats.coverLetters, icon: TrendingUp, color: "text-accent" },
+            { label: "AI Credits", value: stats.credits, icon: Sparkles, color: "text-yellow-500" },
           ].map((s, i) => (
             <motion.div
               key={s.label}

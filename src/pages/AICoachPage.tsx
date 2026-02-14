@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Send, Bot, User, Sparkles } from "lucide-react";
 import { streamChat, type Msg } from "@/lib/ai";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 
 const suggestions = [
   "How do I write a strong resume summary?",
@@ -16,15 +18,42 @@ const suggestions = [
 ];
 
 export default function AICoachPage() {
+  const { user } = useAuth();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
+  // Load chat history
+  useEffect(() => {
+    if (!user) return;
+    const loadMessages = async () => {
+      const { data, error } = await supabase
+        .from("chat_messages")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: true });
+
+      if (data) {
+        setMessages(data.map(m => ({ role: m.role as "user" | "assistant", content: m.content })));
+      }
+    };
+    loadMessages();
+  }, [user]);
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  const saveMessage = async (role: "user" | "assistant", content: string) => {
+    if (!user) return;
+    await supabase.from("chat_messages").insert({
+      user_id: user.id,
+      role,
+      content,
+    });
+  };
 
   const send = async (text: string) => {
     if (!text.trim() || isLoading) return;
@@ -32,6 +61,9 @@ export default function AICoachPage() {
     setMessages(prev => [...prev, userMsg]);
     setInput("");
     setIsLoading(true);
+
+    // Save user message
+    saveMessage("user", text.trim());
 
     let assistantSoFar = "";
     const upsertAssistant = (chunk: string) => {
@@ -49,7 +81,11 @@ export default function AICoachPage() {
       await streamChat({
         messages: [...messages, userMsg],
         onDelta: upsertAssistant,
-        onDone: () => setIsLoading(false),
+        onDone: () => {
+          setIsLoading(false);
+          // Save assistant message when done
+          saveMessage("assistant", assistantSoFar);
+        },
       });
     } catch (e) {
       setIsLoading(false);
@@ -103,11 +139,10 @@ export default function AICoachPage() {
                   <Bot className="h-4 w-4 text-primary" />
                 </div>
               )}
-              <div className={`max-w-[80%] rounded-xl px-4 py-3 text-sm ${
-                m.role === "user"
-                  ? "bg-primary/10 text-foreground"
-                  : "glass-card"
-              }`}>
+              <div className={`max-w-[80%] rounded-xl px-4 py-3 text-sm ${m.role === "user"
+                ? "bg-primary/10 text-foreground"
+                : "glass-card"
+                }`}>
                 {m.role === "assistant" ? (
                   <div className="prose-chat"><ReactMarkdown>{m.content}</ReactMarkdown></div>
                 ) : (
