@@ -1,63 +1,68 @@
-# AI RESUME ANALYZE
+# CareerForge AI 🚀
 
-## Project info
+**CareerForge AI** is a production-ready, AI-powered career platform designed to help users build resume, analyze them against ATS systems, and receive personalized career coaching—all for free.
 
-**URL**: https://resume-ace-ai-17.lovable.app
+## ✨ Features
 
-## How can I edit this code?
+-   **AI Career Coach**: Chat with an AI agent (powered by Google Gemini) for career advice.
+-   **Resume Builder**: Create professional resumes with AI-enhanced bullet points.
+-   **ATS Analyzer**: Get instant feedback on your resume's compatibility with Applicant Tracking Systems.
+-   **Smart Cover Letters**: Generate tailored cover letters for specific job descriptions.
+-   **Free Tier SaaS**: Includes a credit system (10 free credits/user) and chat persistence.
+-   **PDF Export**: Download your resume instantly.
+-   **Themeable**: sleek Dark/Light mode support.
 
-There are several ways of editing your application.
+## 🛠️ Tech Stack
 
-**Use your preferred IDE**
+-   **Frontend**: React, TypeScript, Vite, Tailwind CSS, Shadcn UI
+-   **Backend**: Supabase (PostgreSQL, Auth, Edge Functions)
+-   **AI**: Google Gemini API (Free Tier)
+-   **Deployment**: Netlify (Frontend) + Supabase (Backend)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🚀 Getting Started
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Prerequisites
 
-Follow these steps:
+-   Node.js & npm
+-   Supabase Account
+-   Google AI Studio Key
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Installation
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+1.  **Clone the repo**
+    ```bash
+    git clone https://github.com/your-username/production-resume-ai.git
+    cd production-resume-ai
+    ```
 
-# Step 3: Install the necessary dependencies.
-npm i
+2.  **Install dependencies**
+    ```bash
+    npm install
+    ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+3.  **Environment Setup**
+    Create a `.env` file based on your Supabase credentials:
+    ```env
+    VITE_SUPABASE_URL=your_supabase_url
+    VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_key
+    ```
 
-**Edit a file directly in GitHub**
+4.  **Run Locally**
+    ```bash
+    npm run dev
+    ```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🌐 Deployment
 
-**Use GitHub Codespaces**
+This project is configured for free deployment on **Netlify**.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1.  Push your code to GitHub.
+2.  Import the project into Netlify.
+3.  Set your Environment Variables in Netlify.
+4.  Deploy!
 
-## What technologies are used for this project?
+See [deployment.md](./deployment.md) for a detailed step-by-step guide.
 
-This project is built with:
+## 📄 License
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+MIT License. Created by [Your Name].
